@@ -1,4 +1,4 @@
-package player_server
+package main
 
 import (
 	"net/http"
