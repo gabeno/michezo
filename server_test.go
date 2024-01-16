@@ -5,12 +5,14 @@ import (
 	"fmt"
 	"net/http"
 	"net/http/httptest"
+	"reflect"
 	"testing"
 )
 
 type StubPlayerStore struct {
 	scores   map[string]int
 	winCalls []string
+	league   []Player
 }
 
 func (s *StubPlayerStore) GetPlayerScore(name string) int {
@@ -22,6 +24,10 @@ func (s *StubPlayerStore) RecordWin(name string) {
 	s.winCalls = append(s.winCalls, name)
 }
 
+func (s *StubPlayerStore) GetLeague() []Player {
+	return s.league
+}
+
 func TestGETPlayers(t *testing.T) {
 	store := StubPlayerStore{
 		map[string]int{
@@ -29,6 +35,7 @@ func TestGETPlayers(t *testing.T) {
 			"Bryce": 10,
 		},
 		[]string{},
+		nil,
 	}
 	server := NewPlayerServer(&store)
 
@@ -68,6 +75,7 @@ func TestStoreWins(t *testing.T) {
 	store := StubPlayerStore{
 		map[string]int{},
 		[]string{},
+		nil,
 	}
 	server := NewPlayerServer(&store)
 
@@ -91,9 +99,15 @@ func TestStoreWins(t *testing.T) {
 }
 
 func TestLeague(t *testing.T) {
+	wantedLeague := []Player{
+		{"Cleo", 32},
+		{"Chris", 20},
+		{"Tiest", 14},
+	}
 	stubStore := &StubPlayerStore{
-		map[string]int{},
 		nil,
+		nil,
+		wantedLeague,
 	}
 	server := NewPlayerServer(stubStore)
 
@@ -112,6 +126,10 @@ func TestLeague(t *testing.T) {
 		}
 
 		assertStatus(t, response.Code, http.StatusOK)
+
+		if !reflect.DeepEqual(got, wantedLeague) {
+			t.Errorf("got %v want %v", got, wantedLeague)
+		}
 	})
 }
 
