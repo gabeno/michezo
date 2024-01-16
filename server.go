@@ -50,14 +50,15 @@ func (p *PlayerServer) processWins(w http.ResponseWriter, player string) {
 	w.WriteHeader(http.StatusAccepted)
 }
 
-// handlers
-func (p *PlayerServer) leagueHandler(w http.ResponseWriter, r *http.Request) {
-	leagueTable := []Player{
+func (p *PlayerServer) getLeagueTable() []Player {
+	return []Player{
 		{"Chris", 20},
 	}
+}
 
-	json.NewEncoder(w).Encode(leagueTable)
-
+// handlers
+func (p *PlayerServer) leagueHandler(w http.ResponseWriter, r *http.Request) {
+	json.NewEncoder(w).Encode(p.getLeagueTable())
 	w.WriteHeader(http.StatusOK)
 }
 
