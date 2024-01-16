@@ -100,7 +100,6 @@ func TestStoreWins(t *testing.T) {
 }
 
 func TestLeague(t *testing.T) {
-
 	t.Run("it returns league table as json", func(t *testing.T) {
 		wantedLeague := []Player{
 			{"Cleo", 32},
@@ -118,6 +117,7 @@ func TestLeague(t *testing.T) {
 		got := getLeagueFromReponse(t, response.Body)
 		assertStatus(t, response.Code, http.StatusOK)
 		assertLeague(t, got, wantedLeague)
+		assertContentType(t, response, "application/json")
 	})
 }
 
@@ -159,5 +159,11 @@ func assertStatus(t testing.TB, got, want int) {
 func assertLeague(t testing.TB, got, want []Player) {
 	if !reflect.DeepEqual(got, got) {
 		t.Errorf("got %v want %v", got, got)
+	}
+}
+
+func assertContentType(t testing.TB, response *httptest.ResponseRecorder, want string) {
+	if response.Result().Header.Get("content-type") != want {
+		t.Errorf("response did not have content-type of application/json, got %v", response.Result().Header)
 	}
 }
