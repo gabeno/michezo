@@ -157,8 +157,8 @@ func assertStatus(t testing.TB, got, want int) {
 }
 
 func assertLeague(t testing.TB, got, want []Player) {
-	if !reflect.DeepEqual(got, got) {
-		t.Errorf("got %v want %v", got, got)
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("got %v want %v", got, want)
 	}
 }
 
