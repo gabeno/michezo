@@ -7,19 +7,32 @@ import (
 )
 
 type FileSystemStore struct {
-	database *json.Encoder
-	league   League
+	file   *json.Encoder
+	league League
 }
 
-func NewFileSystemStore(database *os.File) (*FileSystemStore, error) {
-	database.Seek(0, 0)
-	league, err := NewLeague(database)
+func NewFileSystemStore(file *os.File) (*FileSystemStore, error) {
+	file.Seek(0, 0)
+	info, err := file.Stat()
+
 	if err != nil {
-		return nil, fmt.Errorf("problem loading player store from file %s, %v", database.Name(), err)
+		return nil, fmt.Errorf("problem getting file info from file %s, %v", file.Name(), err)
 	}
+
+	if info.Size() == 0 {
+		file.Write([]byte("[]"))
+		file.Seek(0, 0)
+	}
+
+	league, err := NewLeague(file)
+
+	if err != nil {
+		return nil, fmt.Errorf("problem loading player store from file %s, %v", file.Name(), err)
+	}
+
 	return &FileSystemStore{
-		database: json.NewEncoder(&tape{database}),
-		league:   league,
+		file:   json.NewEncoder(&tape{file}),
+		league: league,
 	}, nil
 }
 
@@ -46,5 +59,5 @@ func (f *FileSystemStore) RecordWin(name string) {
 		f.league = append(f.league, Player{name, 1})
 	}
 
-	f.database.Encode(&f.league)
+	f.file.Encode(&f.league)
 }
