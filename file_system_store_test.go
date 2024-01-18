@@ -1,7 +1,6 @@
 package main
 
 import (
-	"io"
 	"os"
 	"testing"
 )
@@ -70,7 +69,7 @@ func assertScoreEquals(t testing.TB, got, want int) {
 	}
 }
 
-func createTempFile(t testing.TB, data string) (io.ReadWriteSeeker, func()) {
+func createTempFile(t testing.TB, data string) (*os.File, func()) {
 	tempFile, err := os.CreateTemp("", "db")
 
 	if err != nil {

@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"io"
+	"os"
 )
 
 type FileSystemStore struct {
@@ -10,7 +11,7 @@ type FileSystemStore struct {
 	league   League
 }
 
-func NewFileSystemStore(database io.ReadWriteSeeker) *FileSystemStore {
+func NewFileSystemStore(database *os.File) *FileSystemStore {
 	database.Seek(0, 0)
 	league, _ := NewLeague(database)
 	return &FileSystemStore{
