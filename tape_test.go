@@ -1,15 +1,17 @@
-package poker
+package poker_test
 
 import (
 	"io"
 	"testing"
+
+	"github.com/gabeno/poker/v1"
 )
 
 func TestTape_Write(t *testing.T) {
-	tempFile, clean := createTempFile(t, "12345")
+	tempFile, clean := poker.CreateTempFile(t, "12345")
 	defer clean()
 
-	tape := tape{tempFile}
+	tape := poker.Tape{tempFile}
 	tape.Write([]byte("abc"))
 
 	tempFile.Seek(0, 0)

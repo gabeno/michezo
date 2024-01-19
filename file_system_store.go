@@ -26,7 +26,7 @@ func NewFileSystemStore(file *os.File) (*FileSystemStore, error) {
 	}
 
 	return &FileSystemStore{
-		file:   json.NewEncoder(&tape{file}),
+		file:   json.NewEncoder(&Tape{file}),
 		league: league,
 	}, nil
 }

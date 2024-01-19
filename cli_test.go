@@ -1,16 +1,18 @@
-package poker
+package poker_test
 
 import (
 	"strings"
 	"testing"
+
+	"github.com/gabeno/poker/v1"
 )
 
 func TestCli(t *testing.T) {
 	t.Run("record a win for a chris", func(t *testing.T) {
 		in := strings.NewReader("Chris wins/n")
-		playerStore := &StubPlayerStore{}
+		playerStore := &poker.StubPlayerStore{}
 
-		cli := &Cli{playerStore, in}
+		cli := &poker.Cli{playerStore, in}
 		cli.PlayPoker()
 
 		assertPlayerWin(t, playerStore, "Chris")
@@ -18,21 +20,21 @@ func TestCli(t *testing.T) {
 
 	t.Run("record a win for a Cleo", func(t *testing.T) {
 		in := strings.NewReader("Cleo wins/n")
-		playerStore := &StubPlayerStore{}
+		playerStore := &poker.StubPlayerStore{}
 
-		cli := &Cli{playerStore, in}
+		cli := &poker.Cli{playerStore, in}
 		cli.PlayPoker()
 
 		assertPlayerWin(t, playerStore, "Cleo")
 	})
 }
 
-func assertPlayerWin(t testing.TB, store *StubPlayerStore, winner string) {
-	if len(store.winCalls) != 1 {
-		t.Fatalf("got %d calls to RecordWin want %d", len(store.winCalls), 1)
+func assertPlayerWin(t testing.TB, store *poker.StubPlayerStore, winner string) {
+	if len(store.WinCalls) != 1 {
+		t.Fatalf("got %d calls to RecordWin want %d", len(store.WinCalls), 1)
 	}
 
-	if store.winCalls[0] != winner {
-		t.Errorf("did not record the correct winner, got %s want %s", store.winCalls[0], winner)
+	if store.WinCalls[0] != winner {
+		t.Errorf("did not record the correct winner, got %s want %s", store.WinCalls[0], winner)
 	}
 }
