@@ -13,15 +13,16 @@ func TestCli(t *testing.T) {
 		cli := &Cli{playerStore, in}
 		cli.PlayPoker()
 
-		if len(playerStore.winCalls) != 1 {
-			t.Fatal("expected a win call but did not get any")
-		}
-
-		got := playerStore.winCalls[0]
-		want := "Chris"
-
-		if got != want {
-			t.Errorf("did not record the correct winner, got %s want %s", got, want)
-		}
+		assertPlayerWin(t, playerStore, "Chris")
 	})
+}
+
+func assertPlayerWin(t testing.TB, store *StubPlayerStore, winner string) {
+	if len(store.winCalls) != 1 {
+		t.Fatalf("got %d calls to RecordWin want %d", len(store.winCalls), 1)
+	}
+
+	if store.winCalls[0] != winner {
+		t.Errorf("did not record thewinner correct winner, got %s want %s", store.winCalls[0], winner)
+	}
 }
